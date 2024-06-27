@@ -7,6 +7,7 @@ import controller.ControllerCliente;
 import controller.Controller;
 import controller.ControllerCarrinho;
 import util.util;
+import controller.FatorialController;
 
 public class View {
     private static Scanner scanner = new Scanner(System.in);
@@ -14,13 +15,15 @@ public class View {
     private ControllerCarrinho controllerCarrinho;
     private ControllerCliente controllerCliente;
     private ControllerCogumelos controllerCogumelos;
+     private FatorialController fatorialController;
 
     public View(Controller controller, ControllerCarrinho controllerCarrinho, ControllerCliente controllerCliente,
-            ControllerCogumelos controllerCogumelos) {
+            ControllerCogumelos controllerCogumelos, FatorialController fatorialController) {
         this.controller = controller;
         this.controllerCarrinho = controllerCarrinho;
         this.controllerCliente = controllerCliente;
         this.controllerCogumelos = controllerCogumelos;
+        his.fatorialController = fatorialController;
     }
 
     public void menuPrincipal() {
@@ -33,10 +36,11 @@ public class View {
                 System.out.println("4. Efetuar Venda");
                 System.out.println("5. Listar Vendas");
                 System.out.println("6. Informação da Empresa");
-                System.out.println("7. Sair");
+                System.out.println("7. Calcular Fatorial");
+                System.out.println("8. Sair");
                 System.out.print("Escolha uma opção: ");
 
-                int opcao = util.lerOpcao(1, 7);
+                int opcao = util.lerOpcao(1, 8);
 
                 switch (opcao) {
                     case 1:
@@ -58,7 +62,10 @@ public class View {
                         infoEmpresa();
                         System.out.println("__________________________");
                         break;
-                    case 7:
+                        case 7:
+                        calcularFatorial();
+                        break;
+                    case 8:
                         System.out.println("Saindo...");
                         return;
                     default:
@@ -68,6 +75,20 @@ public class View {
                 System.out.println("Erro: " + e.getMessage());
             }
         }
+    }
+
+    private void calcularFatorial() {
+        try {
+            int numero = util.lerInteiro("Digite um número para calcular o fatorial: ");
+            long resultado = fatorialController.obterFatorial(numero);
+            exibirFatorial(numero, resultado);
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    public void exibirFatorial(int numero, long resultado) {
+        System.out.println("O fatorial de " + numero + " é " + resultado);
     }
 
     private void menuCogumelos() {
@@ -460,4 +481,9 @@ public class View {
             System.out.println("Erro: " + e.getMessage());
         }
     }
+
+    public void exibirFatorial(int numero, long resultado) {
+        System.out.println("O fatorial de " + numero + " é " + resultado);
+    }
 }
+

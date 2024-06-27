@@ -1,13 +1,14 @@
 package controller;
 
+import factory.ProdutoFactory;
+import model.Produto;
+import util.Logger;
+import util.Serializacao;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import model.Produto;
-import util.Logger;
-import util.Serializacao;
-import util.util;
 
 public class ControllerCogumelos implements Serializable {
 
@@ -21,7 +22,7 @@ public class ControllerCogumelos implements Serializable {
     }
 
     public Optional<Produto> buscarProduto(String nome) {
-        return produtos.stream().filter(p -> p.getNome().equals(nome)).findFirst();
+        return produtos.stream().filter(p -> p.getNome().equalsIgnoreCase(nome)).findFirst();
     }
 
     public Optional<Produto> buscarProduto(int id) {
@@ -30,15 +31,14 @@ public class ControllerCogumelos implements Serializable {
 
     public String adicionarCogumelo(int quant, String nome, String desc, float preco) throws Exception {
         try {
-            Produto prod = new Produto(util.gerarIdProduto(produtos), quant, nome, desc, preco);
             if (buscarProduto(nome).isPresent()) {
                 throw new Exception("O cogumelo já existe");
-            } else {
-                produtos.add(prod);
-                Logger.salvar("O produto " + prod.getNome() + " foi adicionado", "Log");
-                salvarDados();
-                return "O cogumelo foi adicionado com sucesso \n";
             }
+            Produto prod = ProdutoFactory.criarProduto(produtos, quant, nome, desc, preco);
+            produtos.add(prod);
+            Logger.salvar("O produto " + prod.getNome() + " foi adicionado", "Log");
+            salvarDados();
+            return "O cogumelo foi adicionado com sucesso \n";
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Argumentos inválidos: " + e.getMessage());
         } catch (Exception e) {
